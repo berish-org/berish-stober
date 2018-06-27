@@ -1,0 +1,15 @@
+{
+  "name": "berish-stober",
+  "version": "1.0.1",
+  "description": "Library for easing work with local, session and instance storages. Analog for facebook's redux, but more light",
+  "main": "index.js",
+  "author": {
+    "name": "Berishev Ravil"
+  },
+  "dependencies": {
+    "berish-ringle": "^1.0.1",
+    "berish-collection": "^1.0.1",
+    "berish-linq": "^1.0.1",
+    "berish-serber": "^1.0.1"
+  }
+}
