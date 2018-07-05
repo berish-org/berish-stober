@@ -1,4 +1,5 @@
 import * as collection from 'berish-collection';
+import * as ringle from 'berish-ringle';
 import { LINQ } from 'berish-linq';
 import { StorageAdapter, StorageStore } from './abstract/index';
 import { InstanceStorage } from './storageAdapters/';
@@ -11,16 +12,25 @@ export interface IStorageControllerAddStoreConfig {
   serberPlugins?: TypeofSerberPluginAdapter | TypeofSerberPluginAdapter[];
 }
 
-export default class StorageController<Stores extends { [key: string]: StorageStore }> {
+class StorageController<Stores extends { [key: string]: StorageStore }> {
   public stores: Stores = {} as any;
   private _storageInstances = new collection.Dictionary<typeof StorageAdapter, StorageAdapter>();
-  private _listen: ((stores: Stores) => void)[] = [];
+  private _listen = new collection.Dictionary<keyof Stores, ((stores: Stores) => void)[]>();
+
+  type<Stores extends { [key: string]: StorageStore }>() {
+    return (this as any) as StorageController<Stores>;
+  }
+
+  scope(scope: string) {
+    return ringle.getSingleton(StorageController, scope);
+  }
 
   addStore(key: keyof Stores, config?: IStorageControllerAddStoreConfig) {
     config = config || {};
     let storageInstance: StorageAdapter = null;
     config.storage = config.storage || InstanceStorage;
-    if (this._storageInstances.containsKey(config.storage)) storageInstance = this._storageInstances.get(config.storage);
+    if (this._storageInstances.containsKey(config.storage))
+      storageInstance = this._storageInstances.get(config.storage);
     else {
       storageInstance = new config.storage();
       this._storageInstances.add(config.storage, storageInstance);
@@ -47,12 +57,21 @@ export default class StorageController<Stores extends { [key: string]: StorageSt
     }
     return this;
   }
-
-  public listen(cb: (compArg: Stores) => void) {
-    this._listen.push(cb);
+  public listen(cb: (compArg: Stores) => void);
+  public listen(store: keyof Stores, cb: (compArg: Stores) => void);
+  public listen(store?: keyof Stores | ((compArg: Stores) => void), cb?: (compArg: Stores) => void) {
+    let name = typeof store == 'string' ? store : 'default';
+    let listenArgument = typeof store == 'string' ? cb : (store as (compArg: Stores) => void);
+    if (!this._listen.containsKey(name)) this._listen.add(name, []);
+    this._listen.get(name).push(listenArgument);
     return () => {
-      let indexOf = this._listen.indexOf(cb);
-      if (indexOf >= 0) this._listen.splice(indexOf, 1);
+      if (this._listen.containsKey(name)) {
+        let all = LINQ.fromArray(this._listen.get(name))
+          .except([listenArgument])
+          .toArray();
+        this._listen.remove(name);
+        this._listen.add(name, all);
+      }
     };
   }
 
@@ -83,7 +102,7 @@ export default class StorageController<Stores extends { [key: string]: StorageSt
     }>,
     newStores: Stores
   ) {
-    let newAttrs = LINQ.fromArray(Object.keys(this.stores)).select(key => {
+    let newAttrs = LINQ.fromArray(Object.keys(this.stores)).select((key: keyof Stores) => {
       let attr = this.stores[key].attributes;
       return {
         key,
@@ -105,7 +124,22 @@ export default class StorageController<Stores extends { [key: string]: StorageSt
         await newAttr.store.save();
       }
     }
-    // setImmediate(() => GlobalComponentArgs.save(this.componentArgs.global));
-    for (let l of this._listen) setImmediate(() => l(this.stores));
+    let keys = newAttrs.select(m => m.key).toArray();
+    for (let key of keys) {
+      if (this._listen.containsKey(key)) {
+        let listeners = this._listen.get(key);
+        for (let listener of listeners) {
+          setTimeout(() => listener(this.stores), 0);
+        }
+      }
+    }
+    if (this._listen.containsKey('default')) {
+      let listeners = this._listen.get('default');
+      for (let listener of listeners) {
+        setTimeout(() => listener(this.stores), 0);
+      }
+    }
   }
 }
+
+export default ringle.getSingleton(StorageController);

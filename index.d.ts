@@ -1,4 +1,4 @@
 ﻿import * as Adapters from './lib/storageAdapters';
-export declare const StorageController: any;
+import StorageController from './lib/storageController';
 export * from './lib/abstract/index';
-export { Adapters };
+export { Adapters, StorageController };

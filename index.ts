@@ -1,9 +1,5 @@
-import * as ringle from 'berish-ringle';
-import * as Adapters from './lib/storageAdapters'
-import StorageControllerClass from './lib/storageController';
-export const StorageController = ringle.getSingleton(StorageControllerClass);
+import * as Adapters from './lib/storageAdapters';
+import StorageController from './lib/storageController';
 
 export * from './lib/abstract/index';
-export {
-    Adapters
-}
+export { Adapters, StorageController };
