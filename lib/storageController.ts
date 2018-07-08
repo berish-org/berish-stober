@@ -4,7 +4,7 @@ import { LINQ } from 'berish-linq';
 import { StorageAdapter, StorageStore } from './abstract/index';
 import { InstanceStorage } from './storageAdapters/';
 import Serber from 'berish-serber';
-import { TypeofSerberPluginAdapter } from 'berish-serber/abstract';
+import { TypeofSerberPluginAdapter } from 'berish-serber/dist/lib/abstract';
 
 export interface IStorageControllerAddStoreConfig {
   storage?: new () => StorageAdapter;
