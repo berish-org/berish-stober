@@ -1,32 +1,47 @@
 {
   "name": "berish-stober",
-  "version": "2.0.0",
-  "description": "Library for easing work with local, session and instance storages. Analog for facebook's redux, but more light",
-  "main": "dist/index",
-  "typings": "dist/index",
-  "scripts": {
-    "prepublishOnly": "npm run compile",
-    "compile": "npm run clean && tsc -p .",
-    "watch": "tsc -w -p .",
-    "clean": "rm -rf dist"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://quadraticstudio@bitbucket.org/berishev/berish-stober.git"
-  },
-  "license": "MIT",
-  "author": {
-    "name": "Berishev Ravil"
-  },
-  "files": [
-    "dist/index.js",
-    "dist/index.d.ts",
-    "dist/lib"
+  "version": "1.0.0",
+  "description": "Библиотека расширенного манипулирования хранилищем. Позволяет расширять функционал хранения данных посредством специальных обработчиков",
+  "keywords": [
+    "berish",
+    "fartix",
+    "stober",
+    "redux",
+    "store",
+    "storage",
+    "nodejs",
+    "react",
+    "reactnative"
   ],
-  "dependencies": {
-    "berish-collection": "^2.0.1",
-    "berish-linq": "^2.0.0",
-    "berish-ringle": "^2.0.1",
-    "berish-serber": "^2.0.1"
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "repository": "git@gitlab.com:berish-packages/berish-stober.git",
+  "author": "Berishev Ravil <quadraticteam@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "files": [
+    "build/**/*"
+  ],
+  "scripts": {
+    "test": "jest --config jestconfig.json --watch",
+    "build": "tsc -p .",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
+  },
+  "devDependencies": {
+    "@types/faker": "^4.1.4",
+    "@types/jest": "^23.3.10",
+    "faker": "^4.1.0",
+    "jest": "^23.6.0",
+    "prettier": "^1.15.3",
+    "ts-jest": "^23.10.5",
+    "tslint": "^5.12.0",
+    "tslint-config-prettier": "^1.17.0",
+    "typescript": "^3.2.2"
   }
 }
