@@ -1,10 +1,19 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "outDir": "./build",
     "target": "es6",
-    "outDir": "./dist",
-    "moduleResolution": "node",
-    "declaration": true
+    "module": "commonjs",
+    "lib": ["es6"],
+    "declaration": true,
+    "sourceMap": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": false,
+    "strictNullChecks": false,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": false
   },
-  "include": ["lib/**/*.ts", "index.ts"]
+  "include": ["src"],
+  "exclude": ["node_modules", "**/__tests__/*"]
 }
