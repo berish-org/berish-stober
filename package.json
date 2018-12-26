@@ -18,12 +18,12 @@
   "repository": "git@gitlab.com:berish-packages/berish-stober.git",
   "author": "Berishev Ravil <quadraticteam@gmail.com>",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "files": [
     "build/**/*"
   ],
   "scripts": {
-    "test": "jest --config jestconfig.json --watch",
+    "test": "jest --config jestconfig.json --watch --verbose=false",
     "build": "tsc -p .",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
@@ -36,12 +36,20 @@
   "devDependencies": {
     "@types/faker": "^4.1.4",
     "@types/jest": "^23.3.10",
+    "@types/node": "^10.12.18",
+    "@types/redux": "^3.6.0",
+    "@types/uniqid": "^4.1.2",
+    "berish-serber": "^2.0.4",
     "faker": "^4.1.0",
     "jest": "^23.6.0",
     "prettier": "^1.15.3",
+    "redux": "^4.0.1",
     "ts-jest": "^23.10.5",
     "tslint": "^5.12.0",
     "tslint-config-prettier": "^1.17.0",
     "typescript": "^3.2.2"
+  },
+  "dependencies": {
+    "uniqid": "^5.0.3"
   }
 }

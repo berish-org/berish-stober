@@ -1,1 +1,3 @@
-const a = 5;
+export * from './store';
+export * from './dynamicStore';
+export * from './storage';
