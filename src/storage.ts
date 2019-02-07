@@ -1,6 +1,6 @@
 import { Serber as SerberClass } from 'berish-serber/dist/lib/serber';
 
-const STORAGE_PREFIX = 'BERISH-SERBER';
+const STORAGEPREFIX = 'BERISH-SERBER';
 
 export interface IStorageAdapter {
   getItem: (key: string) => Promise<any>;
@@ -9,7 +9,7 @@ export interface IStorageAdapter {
 }
 
 export class Storage {
-  protected storageNameProperty: string = null;
+  protected storageName: string = null;
   protected storageAdapter: IStorageAdapter = null;
   protected serber: SerberClass = null;
 
@@ -22,12 +22,9 @@ export class Storage {
     return this;
   }
 
-  public get storageName() {
-    return this.storageName || STORAGE_PREFIX;
-  }
-
-  public set storageName(value: string) {
+  public setStorageName(value: string) {
     this.storageName = value;
+    return this;
   }
 
   public async save(state: any) {

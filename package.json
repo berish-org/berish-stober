@@ -1,6 +1,6 @@
 {
   "name": "berish-stober",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "description": "Библиотека расширенного манипулирования хранилищем. Позволяет расширять функционал хранения данных посредством специальных обработчиков",
   "keywords": [
     "berish",
@@ -23,7 +23,8 @@
     "build/**/*"
   ],
   "scripts": {
-    "test": "jest --config jestconfig.json --watch --verbose=false",
+    "test": "jest --config jestconfig.json",
+    "test:watch": "jest --config jestconfig.json --watch --verbose=false",
     "build": "tsc -p .",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
