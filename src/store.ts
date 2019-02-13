@@ -5,7 +5,7 @@ export interface IAction {
   [key: string]: any;
 }
 export type IReducer<State> = (state: State, action: IAction) => State;
-export type ISubscriber<State> = (newState: State) => any;
+export type ISubscriber<Store, State> = (store: Store, newState: State) => any;
 
 export interface IStoreAdapter<State> {
   getState: () => State;
@@ -27,7 +27,7 @@ export class Store<State = any> {
   protected storeAdapterFabric: StoreAdapterFabric<State> = null;
   protected storeAdapter: IStoreAdapter<State> = null;
   protected reducers: Array<IReducer<State>> = [];
-  protected callbacks: Array<ISubscriber<State>> = [];
+  protected callbacks: Array<ISubscriber<this, State>> = [];
   protected stateSymbol: symbol = Symbol('state');
   protected storage: Storage = null;
   constructor(storeAdapterFabric: StoreAdapterFabric<State>, reducers: Array<IReducer<State>>, initialState?: State) {
@@ -58,10 +58,10 @@ export class Store<State = any> {
     return this.storeAdapter.dispatch(action);
   }
 
-  public subscribe(config: ISubscriber<State>) {
+  public subscribe(config: ISubscriber<this, State>) {
     const listener = this.storeAdapter.subscribe(() => {
       this.state = this.storeAdapter.getState();
-      config(this.state);
+      config(this, this.state);
       if (this.storage) {
         this.storage.save(this.state);
       }
