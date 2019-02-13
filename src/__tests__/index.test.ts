@@ -15,8 +15,9 @@ describe('тестирование основного модуля', () => {
     const store = new Stober.Store(createStore, [reducer]);
     expect(store).toBeDefined();
 
-    store.subscribe(m => {
-      expect(m).toEqual({ a: 0 });
+    store.subscribe((store, state) => {
+      expect(store.get('a')).toEqual(0);
+      expect(state).toEqual({ a: 0 });
     });
     store.dispatch({ type: 'HEY', key: 'a', value: 0 });
     expect(store.get('a')).toBe(0);
