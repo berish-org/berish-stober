@@ -127,7 +127,7 @@ describe('тестирование основного модуля', () => {
       name: guid.generateId(),
     };
 
-    await storageAdapter1.onChange(state => {
+    await storageAdapter1.changes(state => {
       expect(state).toEqual(testState);
       done();
     });
