@@ -28,6 +28,7 @@ export class DynamicStore<State = any> extends Store<State> {
         const action = this.create(store => {
           store.state = state;
         });
+        this.isEmittedByOnChange = true;
         this.dispatch(action);
       });
     return this;

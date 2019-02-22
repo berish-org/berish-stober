@@ -30,6 +30,7 @@ export class Store<State = any> {
   protected callbacks: Array<ISubscriber<this, State>> = [];
   protected stateSymbol: symbol = Symbol('state');
   protected storage: Storage = null;
+  protected isEmittedByOnChange = false;
   constructor(storeAdapterFabric: StoreAdapterFabric<State>, reducers: Array<IReducer<State>>, initialState?: State) {
     this.dispatch = this.dispatch.bind(this);
     this.subscribe = this.subscribe.bind(this);
@@ -55,9 +56,13 @@ export class Store<State = any> {
   }
 
   public async dispatch<T extends IAction>(action: T) {
-    await this.storeAdapter.dispatch(action);
-    if (this.storage) {
-      await this.storage.save(this.state);
+    try {
+      await this.storeAdapter.dispatch(action);
+      if (this.storage && !this.isEmittedByOnChange) {
+        await this.storage.save(this.state);
+      }
+    } finally {
+      this.isEmittedByOnChange = false;
     }
   }
 
