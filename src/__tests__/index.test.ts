@@ -37,13 +37,10 @@ describe('тестирование основного модуля', () => {
     store.subscribe((store, state) => {
       expect(store.get('a')).toEqual(0);
       expect(state).toEqual({ a: 0 });
+      done();
     });
     store.dispatch({ type: 'HEY', key: 'a', value: 0 });
     expect(store.get('a')).toBe(0);
-    store.set('a', 1);
-    expect(store.get('a')).toBe(1);
-
-    done();
   });
 
   test('Создание динамического стора', done => {
@@ -147,6 +144,8 @@ describe('тестирование основного модуля', () => {
     const store1 = new Stober.DynamicStore<any>(createStore, []).setStorage(storageAdapter1);
     const store2 = new Stober.DynamicStore<any>(createStore, []).setStorage(storageAdapter2);
 
+    store1.changesStart();
+
     const name = guid.generateId();
 
     await store1.subscribe(store => {
@@ -172,6 +171,8 @@ describe('тестирование основного модуля', () => {
 
     const store1 = new Stober.DynamicStore<any>(createStore, []).setStorage(storageAdapter1);
     const store2 = new Stober.DynamicStore<any>(createStore, []).setStorage(storageAdapter2);
+
+    store1.changesStart();
 
     const name = guid.generateId();
 

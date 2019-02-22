@@ -22,19 +22,6 @@ export class DynamicStore<State = any> extends Store<State> {
   private methodAction = uniqid('dynamicStore');
   private changesUnlistener: () => void = null;
 
-  public setStorage(storage: Storage) {
-    super.setStorage(storage);
-    if (this.storage)
-      this.changesUnlistener = this.storage.changes(state => {
-        const action = this.create(store => {
-          store.state = state;
-        });
-        this.isEmittedByOnChange = true;
-        this.dispatch(action);
-      });
-    return this;
-  }
-
   public isMethodAction(action: IAction): action is IMethodAction<State, this> {
     if (action.type === this.methodAction) return true;
     return false;
@@ -51,6 +38,17 @@ export class DynamicStore<State = any> extends Store<State> {
 
   public create(methodReducer: IMethodReducer<State, this>): IMethodAction<State, this> {
     return { type: this.methodAction, reducer: methodReducer };
+  }
+
+  public changesStart() {
+    if (this.storage)
+      this.changesUnlistener = this.storage.changes(state => {
+        const action = this.create(store => {
+          store.state = state;
+        });
+        this.isEmittedByOnChange = true;
+        this.dispatch(action);
+      });
   }
 
   public changesStop() {
