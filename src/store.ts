@@ -54,17 +54,17 @@ export class Store<State = any> {
     return this;
   }
 
-  public dispatch<T extends IAction>(action: T) {
-    return this.storeAdapter.dispatch(action);
+  public async dispatch<T extends IAction>(action: T) {
+    await this.storeAdapter.dispatch(action);
+    if (this.storage) {
+      await this.storage.save(this.state);
+    }
   }
 
   public subscribe(config: ISubscriber<this, State>) {
     const listener = this.storeAdapter.subscribe(() => {
       this.state = this.storeAdapter.getState();
       config(this, this.state);
-      if (this.storage) {
-        this.storage.save(this.state);
-      }
     });
     this.callbacks.push(config);
     if (this.callbacks.length === 1) this.storeSubscribed();
@@ -98,7 +98,7 @@ export class Store<State = any> {
   }
 
   protected storeInitialized() {
-    // store will mount event
+    // store will mount event)
   }
 
   protected storeSubscribed() {

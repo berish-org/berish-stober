@@ -439,10 +439,24 @@ berish-collection@^2.0.1:
   dependencies:
     berish-linq "^2.0.0"
 
+berish-guid@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/berish-guid/-/berish-guid-2.0.0.tgz#cdb59b1fa80ef106e4658aef9a2b1ccaf0b067fe"
+  integrity sha1-zbWbH6gO8QbkZYrvmiscyvCwZ/4=
+  dependencies:
+    berish-ringle "^2.0.0"
+
 berish-linq@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/berish-linq/-/berish-linq-2.0.0.tgz#0fa7a7b069e83014d8179c0363d27c79d4cee551"
   integrity sha1-D6ensGnoMBTYF5wDY9J8edTO5VE=
+  dependencies:
+    berish-collection "^2.0.1"
+
+berish-ringle@^2.0.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/berish-ringle/-/berish-ringle-2.1.0.tgz#1a223b006b1c0aa9855dea18283b6fb4d6f2474e"
+  integrity sha512-oc4O0NaNF2yd5TGPdrdP9wDUCJAkMicz4RtzH1pjAP0bwdoXjt7BYwGOHepTmonBCe/nfKHI9K0gH7+VHeRrdQ==
   dependencies:
     berish-collection "^2.0.1"
 

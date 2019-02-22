@@ -3,6 +3,8 @@
   "rules": {
     "curly": false,
     "no-console": false,
-    "no-shadowed-variable": false
+    "no-shadowed-variable": false,
+    "no-string-literal": false,
+    "array-type": false
   }
 }
