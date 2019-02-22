@@ -30,7 +30,8 @@ export class Store<State = any> {
   protected callbacks: Array<ISubscriber<this, State>> = [];
   protected stateSymbol: symbol = Symbol('state');
   protected storage: Storage = null;
-  protected isEmittedByOnChange = false;
+  protected isEmittedByDispatch = false;
+
   constructor(storeAdapterFabric: StoreAdapterFabric<State>, reducers: Array<IReducer<State>>, initialState?: State) {
     this.dispatch = this.dispatch.bind(this);
     this.subscribe = this.subscribe.bind(this);
@@ -58,11 +59,11 @@ export class Store<State = any> {
   public async dispatch<T extends IAction>(action: T) {
     try {
       await this.storeAdapter.dispatch(action);
-      if (this.storage && !this.isEmittedByOnChange) {
+      if (this.storage && !this.isEmittedByDispatch) {
         await this.storage.save(this.state);
       }
     } finally {
-      this.isEmittedByOnChange = false;
+      this.isEmittedByDispatch = false;
     }
   }
 
@@ -80,10 +81,12 @@ export class Store<State = any> {
     };
   }
 
-  public async load() {
-    if (this.storage) {
-      this.state = (await this.storage.load()) || this.state || this.storeAdapter.getState();
-    }
+  public async loadState() {
+    let loadedState = null;
+    if (this.storage) loadedState = await this.storage.load();
+    if (!loadedState) loadedState = this.state || this.storeAdapter.getState();
+    this.state = loadedState;
+    return loadedState;
   }
 
   public async clear() {

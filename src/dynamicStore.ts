@@ -40,13 +40,23 @@ export class DynamicStore<State = any> extends Store<State> {
     return { type: this.methodAction, reducer: methodReducer };
   }
 
+  public async loadState() {
+    const loadedState = await super.loadState();
+    const action = this.create(store => {
+      store.state = loadedState;
+    });
+    this.isEmittedByDispatch = true;
+    this.dispatch(action);
+    return this.state;
+  }
+
   public changesStart() {
     if (this.storage)
       this.changesUnlistener = this.storage.changes(state => {
         const action = this.create(store => {
           store.state = state;
         });
-        this.isEmittedByOnChange = true;
+        this.isEmittedByDispatch = true;
         this.dispatch(action);
       });
   }
