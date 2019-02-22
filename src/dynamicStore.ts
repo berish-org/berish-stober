@@ -20,11 +20,12 @@ export interface IMethodAction<State, TStore extends DynamicStore<State>> extend
 
 export class DynamicStore<State = any> extends Store<State> {
   private methodAction = uniqid('dynamicStore');
+  private changesUnlistener: () => void = null;
 
   public setStorage(storage: Storage) {
     super.setStorage(storage);
     if (this.storage)
-      this.storage.onChange(state => {
+      this.changesUnlistener = this.storage.changes(state => {
         const action = this.create(store => {
           store.state = state;
         });
@@ -50,6 +51,10 @@ export class DynamicStore<State = any> extends Store<State> {
 
   public create(methodReducer: IMethodReducer<State, this>): IMethodAction<State, this> {
     return { type: this.methodAction, reducer: methodReducer };
+  }
+
+  public changesStop() {
+    if (this.changesUnlistener) this.changesUnlistener();
   }
 
   protected storeInitialized() {

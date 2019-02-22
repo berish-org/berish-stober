@@ -14,6 +14,7 @@ export class Storage {
   protected storageAdapter: IStorageAdapter = null;
   protected serber: SerberClass = null;
   private [SYMBOL_STORAGE_NAME]: string = null;
+  private onChangeListeners: (() => void)[] = [];
 
   constructor(storageAdapter: IStorageAdapter) {
     this.storageAdapter = storageAdapter;
@@ -49,9 +50,9 @@ export class Storage {
     await this.storageAdapter.removeItem(this.getStorageName());
   }
 
-  public onChange(cb: (state: any) => void) {
+  public changes(cb: (state: any) => void) {
     if (this.storageAdapter.onChange) {
-      this.storageAdapter.onChange((key, value) => {
+      return this.storageAdapter.onChange((key, value) => {
         if (key === this.getStorageName()) {
           const newState = JSON.parse(value);
           const state = (this.serber && this.serber.deserialize(newState)) || newState;
@@ -59,5 +60,6 @@ export class Storage {
         }
       });
     }
+    return null;
   }
 }
